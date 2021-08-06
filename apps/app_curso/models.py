@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.deletion import CASCADE
 
 class CourseManager(models.Manager):
     def basic_validator(self, postData,tipo=None):
@@ -22,3 +21,9 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = CourseManager()
+
+class Comentario(models.Model):
+    comentario = models.TextField()
+    curso = models.ForeignKey(Course, related_name="cursos", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

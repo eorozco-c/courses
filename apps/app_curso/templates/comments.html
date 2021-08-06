@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block content %}
+<div class="uk-container-small uk-margin-auto-left uk-margin-auto-right">
+<h1>{{datos.name}}</h1>
+<p>{{datos.description.description}}</p>
+<a href="/">Go back <i class="icon-share-alt"></i></a>
+  <div id="alerts"></div>
+  <form class="uk-margin uk-width-1-2 " action="/courses/comment/create/{{datos.id}}" method="POST">
+    {% csrf_token %}
+    <label for="comment">Comentar:</label>
+    <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+    <input
+      class="uk-margin-left uk-button-secondary"
+      type="submit"
+      value="add"
+    />
+  </form>
+  <table class="uk-table uk-table-striped uk-table-hover uk-box-shadow-large">
+    <thead>
+      <tr>
+        <th class="">Comentarios</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for comentario in comentarios %}
+      <tr>
+        <td class="">{{comentario.comentario}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %} {% block title %}Comments{% endblock %}
+{% block javascript %}
+<script>
+{% endblock %}
