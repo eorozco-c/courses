@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% block content %}
+<div class="uk-container-small uk-margin-auto-left uk-margin-auto-right">
+  <h1>Add a new course</h1>
+  <div id="alerts"></div>
+  <form class="uk-margin uk-width-1-2 " action="/courses/create" method="POST">
+    {% csrf_token %}
+    <label for="name">Name:</label>
+    <input class="" type="text" name="name" id="name" />
+    <label for="description">Description:</label>
+    <input class="" type="text" name="description" id="description" />
+    <input
+      class="uk-margin-left uk-button-secondary"
+      type="submit"
+      value="add"
+    />
+  </form class="">
+  <table class="uk-table uk-table-striped uk-table-hover uk-box-shadow-large">
+    <thead>
+      <tr>
+        <th class="">Course Name</th>
+        <th class="">Description</th>
+        <th class="">Date Added</th>
+        <th class="">action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for curso in cursos %}
+      <tr>
+        <td class="">{{curso.name}}</td>
+        <td class="">{{curso.description.description}}</td>
+        <td class="">{{curso.created_at}}</td>
+        <td class="">
+          <a href="courses/predestroy/{{curso.id}}" cursoid="{{curso.id}}" id="delete"
+            >Remove <i class="icon-trash"></i
+          ></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% comment %} <div id="modal-sections" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Are You sure you want to delete the following course?</h2>
+        </div>
+        <div class="uk-modal-body">
+           
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary" type="button">Save</button>
+        </div>
+    </div>
+</div> {% endcomment %}
+  </div>
+  {% endblock %} {% block title %}Courses{% endblock %}
+  {% block javascript %}
+<script>       
+  $("form").submit(function (event) {
+    event.preventDefault();
+    var form = $(this).serialize();
+    $.ajax({
+      type: "POST",
+      url: "/courses/create",
+      data: form,
+      dataType: "json",
+      success: function (data) {
+        if ("resultado" in data) {
+          msg =
+              "<div id='div-alert' class='uk-alert-success' uk-alert><a class='uk-alert-close' uk-close></a><p>Registro agregado correctamente</p></div>";
+            $("#alerts").append(msg);
+            setTimeout(function () {
+            window.location.href = "/";
+          }, 3000);
+        } else {
+          for (const property in data) {
+            msg =
+              "<div id='div-alert' class='uk-alert-danger' uk-alert><a class='uk-alert-close' uk-close></a><p>" +
+              data[property] +
+              "</p></div>";
+            $("#alerts").append(msg);
+          }
+          setTimeout(function () {
+            $("#alerts").empty();
+          }, 5000);
+        }
+      },
+    });
+  });
+</script>
+{% endblock %}

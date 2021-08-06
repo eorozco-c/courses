@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<div class="uk-container-small uk-margin-auto-left uk-margin-auto-right">
+<h2>Are You sure you want to delete the following course?</h2>
+<p>Name: <span>{{curso.name}}</span></p>
+<p>Description: <span>{{curso.description.description}}</span></p>
+<div class="uk-margin-top  uk-padding-small">
+<a class="uk-margin-left uk-padding-small uk-button-secondary" href="/">NO</a>
+<a class="uk-margin-left uk-padding-small uk-button-danger" href="/courses/destroy/{{curso.id}}">Yes! I want to delete</a>
+</div>
+</div>
+{% endblock %} {% block title %}Destroy{% endblock %}
+{% block javascript %}
+<script>
+{% endblock %}
