@@ -11,7 +11,7 @@ def index(request):
 
 def create(request):
     if request.method == "POST":
-        errors = Course.objects.basic_validator(request.POST,"create")
+        errors = Course.objects.basic_validator(request.POST)
         if len(errors) > 0:
             return JsonResponse(errors)
         name = request.POST["name"]
@@ -39,6 +39,19 @@ def comment(request,id):
 
 def create_comment(request,idCurso):
      if request.method == "POST":
+        errors = Comentario.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            return JsonResponse(errors)
         comment = request.POST["comment"]
-        Comentario.objects.create(comentario=comment,curso=Course.objects.get(id=idCurso))
-        return redirect(f"/courses/comment/{idCurso}")
+        comentario = Comentario.objects.create(comentario=comment,curso=Course.objects.get(id=idCurso))
+        print(comentario.curso.id)
+        return JsonResponse({"resultado": comentario.curso.id })
+
+def modal_view(request, id):
+    curso = Course.objects.get(id=id)
+    context={
+        'name': curso.name,
+        'desc' : curso.description.description,
+        'id' : curso.id,
+    }
+    return JsonResponse(context)

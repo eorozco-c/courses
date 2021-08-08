@@ -1,10 +1,14 @@
 {% extends 'base.html' %} {% block content %}
 <div class="uk-container-small uk-margin-auto-left uk-margin-auto-right">
-<h1>{{datos.name}}</h1>
-<p>{{datos.description.description}}</p>
-<a href="/">Go back <i class="icon-share-alt"></i></a>
+  <h1>{{datos.name}}</h1>
+  <p>{{datos.description.description}}</p>
+  <a href="/">Go back <i class="icon-share-alt"></i></a>
   <div id="alerts"></div>
-  <form class="uk-margin uk-width-1-2 " action="/courses/comment/create/{{datos.id}}" method="POST">
+  <form
+    class="uk-margin uk-width-1-2"
+    action="/courses/comment/create/{{datos.id}}"
+    method="POST"
+  >
     {% csrf_token %}
     <label for="comment">Comentar:</label>
     <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
@@ -29,7 +33,38 @@
     </tbody>
   </table>
 </div>
-{% endblock %} {% block title %}Comments{% endblock %}
-{% block javascript %}
+{% endblock %} {% block title %}Comments{% endblock %} {% block javascript %}
 <script>
+  $("form").submit(function (event) {
+    event.preventDefault();
+    var form = $(this).serialize();
+    $.ajax({
+      type: "POST",
+      url: "/courses/comment/create/"+ {{datos.id}},
+      data: form,
+      dataType: "json",
+      success: function (data) {
+        if ("resultado" in data) {
+          msg =
+            "<div id='div-alert' class='uk-alert-success' uk-alert><a class='uk-alert-close' uk-close></a><p>Registro agregado correctamente</p></div>";
+          $("#alerts").append(msg);
+          setTimeout(function () {
+            window.location.href = "/courses/comment/" + data["resultado"];
+          }, 2000);
+        } else {
+          for (const property in data) {
+            msg =
+              "<div id='div-alert' class='uk-alert-danger' uk-alert><a class='uk-alert-close' uk-close></a><p>" +
+              data[property] +
+              "</p></div>";
+            $("#alerts").append(msg);
+          }
+          setTimeout(function () {
+            $("#alerts").empty();
+          }, 5000);
+        }
+      },
+    });
+  });
+</script>
 {% endblock %}
